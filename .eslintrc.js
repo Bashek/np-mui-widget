@@ -1,6 +1,6 @@
 module.exports = {
-  extends: process.env.REACT_APP_DEV_DISABLE_ESLINT ? [] : ['react-app', 'airbnb-typescript'],
-  rules: process.env.REACT_APP_DEV_DISABLE_ESLINT ? {} : {
+  extends: ['react-app', 'airbnb-typescript'],
+  rules: {
     'react/jsx-props-no-spreading': 'off',
     'import/prefer-default-export': 'off',
     '@typescript-eslint/naming-convention': [
@@ -10,7 +10,7 @@ module.exports = {
       format: ['UPPER_CASE']
     }]
   },
-  parserOptions: process.env.REACT_APP_DEV_DISABLE_ESLINT ? {} : {
+  parserOptions: {
     project: './tsconfig.json',
   }
 };
