@@ -42,7 +42,7 @@ export class ApiService {
       }
     }
 
-    return Promise.resolve(<SettlementAddress[]> this.searchSettlementCache.get(query));
+    return Promise.resolve(this.searchSettlementCache.get(query) as SettlementAddress[]);
   }
 
   async getPoints(npCity: SettlementAddress): Promise<NPPoint[]> {
@@ -64,7 +64,7 @@ export class ApiService {
       }
     }
 
-    return Promise.resolve(<NPPoint[]> this.searchNPPointCache.get(cityRef));
+    return Promise.resolve(this.searchNPPointCache.get(cityRef) as NPPoint[]);
   }
 
   private makeRequest<T extends ApiResponse>(properties: ApiRequest): Promise<T> {
@@ -88,7 +88,9 @@ export class ApiService {
       }
 
       return Promise.reject(
-        new Error(`Can not make request ${properties.calledMethod}. Status ${response.statusText}`),
+        new Error(
+          `Can not make request ${properties.calledMethod}. Status ${response.statusText}, code ${response.status}`,
+        ),
       );
     }).then((data) => {
       if (data.errorCodes.length) {

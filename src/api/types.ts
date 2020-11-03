@@ -12,6 +12,8 @@ export type SettlementAddress = {
   SettlementTypeCode: string,
   Ref: string,
   DeliveryCity: string,
+  StreetsAvailability: boolean,
+  RegionTypes: string,
   Present: string, // Human readable description
 };
 
@@ -23,10 +25,14 @@ export type NPPoint = {
   Ref: string,
   Number: string,
   CityRef: string,
+  SiteKey: string,
+  ShortAddress: string,
+  ShortAddressRu: string,
   CityDescription: string,
   CityDescriptionRu: string,
-  TotalMaxWeightAllowed: number,
-  PlaceMaxWeightAllowed: number
+  TotalMaxWeightAllowed: string,
+  PlaceMaxWeightAllowed: string,
+  [key: string]: unknown
 };
 
 export type SearchSettlementRequest = {
@@ -45,29 +51,26 @@ export type SearchSettlementResponse = {
     Addresses: SettlementAddress[],
     TotalCount: number
   }],
-  info: {
-    totalCount: number
-  },
+  info: unknown[],
   errors: unknown[],
   warnings: unknown[],
   messageCodes: unknown[],
   errorCodes: number[],
-  warningCodes: number,
+  warningCodes: number[],
   infoCodes: number[]
 };
 
 export type SearchPointResponse = {
   success: boolean,
+  TotalCount: number,
   data: NPPoint[],
-  info: {
-    totalCount: number
-  },
   errors: unknown[],
   warnings: unknown[],
   messageCodes: unknown[],
   errorCodes: number[],
-  warningCodes: number,
-  infoCodes: number[]
+  warningCodes: number[],
+  infoCodes: number[],
+  info: { totalCount: number }
 };
 
 export type SearchPointRequest = {

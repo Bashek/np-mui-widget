@@ -8,7 +8,8 @@ module.exports = {
       {
       selector: 'enum',
       format: ['UPPER_CASE']
-    }]
+    }],
+    'arrow-body-style': 'off'
   },
   parserOptions: {
     project: './tsconfig.json',
