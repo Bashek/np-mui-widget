@@ -62,7 +62,6 @@ export type SearchSettlementResponse = {
 
 export type SearchPointResponse = {
   success: boolean,
-  TotalCount: number,
   data: NPPoint[],
   errors: unknown[],
   warnings: unknown[],
