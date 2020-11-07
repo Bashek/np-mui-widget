@@ -45,12 +45,13 @@ export function PointSelect({
 
   return (
     <Autocomplete
-      id="npw-city"
+      id="npw-point"
       fullWidth
       className={className}
       disabled={!points.length}
       options={points}
       loading={!loading}
+      loadingText={LOCALE.LOADING_LABEL}
       openOnFocus
       value={value}
       onChange={(event: any, nextValue: NPPoint | null) => {

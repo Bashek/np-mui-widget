@@ -50,7 +50,9 @@ export function CitySelect({
     }
 
     (async () => {
-      const timeOut = setTimeout(() => setLoading(true), appConfig.showLoadingSpinAfter);
+      const timeOut = setTimeout(() => {
+        setLoading(true);
+      }, appConfig.showLoadingSpinAfter);
       const response = await apiService.searchSettlements(queryString);
 
       clearTimeout(timeOut);
@@ -75,6 +77,7 @@ export function CitySelect({
       onInputChange={(event, newInputValue) => {
         setQueryString(newInputValue);
       }}
+      loadingText={LOCALE.LOADING_LABEL}
       noOptionsText={queryString ? LOCALE.NOT_FOUND : LOCALE.ENTER_LOCALITY}
       getOptionSelected={(option, value) => option.Ref === value.Ref}
       getOptionLabel={(option) => option.Present}
