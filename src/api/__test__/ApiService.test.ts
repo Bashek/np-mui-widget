@@ -1,9 +1,9 @@
 import fetch from 'jest-fetch-mock';
-import { createConfig } from '../createConfig';
-import { ApiService } from './ApiService';
-import { SearchSettlementResponseMock } from './__moks__/SearchSettlementResponseMock';
-import { SearchPointResponseMock } from './__moks__/SearchPointResponseMock';
-import { SettlementAddress } from './types';
+import { createConfig } from '../../createConfig';
+import { ApiService } from '../ApiService';
+import { SearchSettlementResponseMock } from '../__mocks__/SearchSettlementResponseMock';
+import { SearchPointResponseMock } from '../__mocks__/SearchPointResponseMock';
+import { SettlementAddress } from '../types';
 
 const createService = ({ errorHandler } = { errorHandler: () => {} }) => {
   const config = createConfig();
