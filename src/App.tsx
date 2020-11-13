@@ -1,12 +1,12 @@
 import React from 'react';
 import './App.css';
-import { Container, Grid } from '@material-ui/core';
+import { Container, Grid, Typography } from '@material-ui/core';
 import { NPWidget, OnChangeEvent } from './components/NPWidget';
 import { InitialAppConfig } from './types';
 
 function App() {
   const onChange = (values: OnChangeEvent) => {
-    console.log(values);  // eslint-disable-line
+    console.error(values);  // eslint-disable-line
   };
 
   const config: InitialAppConfig = {
@@ -16,6 +16,9 @@ function App() {
 
   return (
     <div className="App">
+      <Typography variant="h2" gutterBottom>
+        Nova Poshta address select example
+      </Typography>
       <Container component="main" maxWidth="lg">
         <Grid
           container

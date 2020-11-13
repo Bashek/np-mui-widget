@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "sourceMap": true,
+    "declaration": true,
+    "noEmit": false,
+    "outDir": "./lib/"
+  },
+  "include": [
+    "src/widget.ts"
+  ]
+}
