@@ -1,6 +1,6 @@
 {
   "name": "np-mui-widget",
-  "version": "0.2.7",
+  "version": "0.3.1",
   "private": false,
   "dependencies": {
     "@material-ui/core": "^4.11.0",
