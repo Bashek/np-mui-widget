@@ -4,6 +4,7 @@ module.exports = {
   rules: {
     'react/jsx-props-no-spreading': 'off',
     'import/prefer-default-export': 'off',
+    'react/jsx-one-expression-per-line': 'off',
     "import/no-extraneous-dependencies": [
       "error",
       {

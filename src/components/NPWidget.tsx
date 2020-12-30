@@ -1,24 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { createStyles, Theme } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 
-import { makeStyles } from '@material-ui/core/styles';
-import { ApiService } from '../api/ApiService';
 import { PointSelect } from './PointSelect';
 import { CitySelect } from './CitySelect';
-import { createConfig } from '../createConfig';
 import { NPPoint, SettlementAddress } from '../api/types';
-import { errorHandler as defaultErrorHandler } from '../errors/errorHandler';
-import { InitialAppConfig } from '../types';
-import { LOCALE_UA, LOCALE_RU } from '../locale';
-import { LANG_RU } from '../consts';
-import { LocaleContext } from './LocaleContext';
-
-const useStyles = makeStyles((theme: Theme) => createStyles({
-  formControl: {
-    marginBottom: theme.spacing(4),
-    minWidth: '100%',
-  },
-}));
+import { Lang } from '../types';
+import { LANG_UA } from '../consts';
 
 export type OnChangeEvent = {
   fulfilled: boolean,
@@ -26,35 +13,43 @@ export type OnChangeEvent = {
   point: NPPoint | null
 };
 
-export type WPWidgetProps = {
-  config?: InitialAppConfig,
-  onChange?: (event: OnChangeEvent) => void,
+export type WPWidgetInputProps = {
+  onChange: (event: OnChangeEvent) => void,
   onError?: (error: Error) => void,
-  locale?: Partial<typeof LOCALE_UA>
+  lang?: Lang,
+  apiKey?: string,
+  apiUrl?: string,
+  showDefaults?: boolean,
+  pointClassName?: string,
+  cityClassName?: string,
+  loadingSpinDelay?: number
 };
 
-export function NPWidget({
-  onChange, config: initialConfig, onError, locale: customLocale,
-}: WPWidgetProps) {
-  const classes = useStyles();
-  const [city, setCity] = useState<SettlementAddress | null>(null);
-  const [point, setPoint] = useState<NPPoint | null>(null);
-  const errorHandler = onError || defaultErrorHandler;
-  const [{ config, apiService, locale }] = useState(() => {
-    const appConfig = createConfig(initialConfig);
-    const appLocale = appConfig.lang === LANG_RU ? LOCALE_RU : LOCALE_UA;
+type WPWidgetProps = Required<Omit<WPWidgetInputProps, 'apiKey' | 'apiUrl' | 'onChange'>>;
+const defaultProps: WPWidgetProps = {
+  onError: (error: Error) => {
+    console.log(error);
+  },
+  lang: LANG_UA,
+  showDefaults: true,
+  pointClassName: '',
+  cityClassName: '',
+  loadingSpinDelay: 500,
+};
 
-    if (customLocale) {
-      Object.assign(appLocale, customLocale);
-    }
-
+export function NPWidget(props: WPWidgetInputProps) {
+  const [config] = useState(() => {
     return {
-      config: appConfig,
-      apiService: new ApiService(appConfig, errorHandler),
-      locale: appLocale,
+      ...defaultProps,
+      ...props,
     };
   });
-
+  const {
+    onChange, onError, lang, apiKey, apiUrl, pointClassName,
+    cityClassName, loadingSpinDelay, showDefaults,
+  } = config;
+  const [city, setCity] = useState<SettlementAddress | null>(null);
+  const [point, setPoint] = useState<NPPoint | null>(null);
   useEffect(() => {
     if (onChange) {
       onChange({
@@ -66,22 +61,33 @@ export function NPWidget({
   }, [city, point]);
 
   return (
-    <>
-      <LocaleContext.Provider value={locale}>
+    <Grid container spacing={2}>
+      <Grid item xs={12}>
         <CitySelect
-          apiService={apiService}
-          appConfig={config}
-          className={classes.formControl}
-          onChange={(value) => setCity(value)}
+          onChange={(value) => {
+            setCity(value);
+          }}
+          className={cityClassName}
+          lang={lang}
+          apiUrl={apiUrl}
+          apiKey={apiKey}
+          loadingSpinDelay={loadingSpinDelay}
+          showDefaults={showDefaults}
+          onError={onError}
         />
+      </Grid>
+      <Grid item xs={12}>
         <PointSelect
           city={city}
-          className={classes.formControl}
-          apiService={apiService}
-          appConfig={config}
+          className={pointClassName}
+          lang={lang}
+          apiUrl={apiUrl}
+          apiKey={apiKey}
+          loadingSpinDelay={loadingSpinDelay}
+          onError={onError}
           onChange={(nextPoint) => setPoint(nextPoint)}
         />
-      </LocaleContext.Provider>
-    </>
+      </Grid>
+    </Grid>
   );
 }

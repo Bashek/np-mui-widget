@@ -1,10 +1,9 @@
+import { LANG_RU, LANG_UA } from './consts';
+
+export type Lang = typeof LANG_RU | typeof LANG_UA;
+
 export type AppConfig = {
   apiKey: string,
-  searchCityLimit: number,
   apiUrl: string,
-  showDefaultCities: boolean,
-  showLoadingSpinAfter: number,
-  lang: string
+  lang: Lang
 };
-
-export type InitialAppConfig = Partial<AppConfig>;

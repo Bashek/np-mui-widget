@@ -1,22 +1,19 @@
-import React from 'react';
-import './App.css';
-import { Container, Grid, Typography } from '@material-ui/core';
+import React, { useState } from 'react';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import ErrorIcon from '@material-ui/icons/Error';
+import {
+  Badge, Box, Container, Grid, Typography,
+} from '@material-ui/core';
 import { NPWidget, OnChangeEvent } from './components/NPWidget';
-import { InitialAppConfig } from './types';
+import './App.css';
 
 function App() {
-  const onChange = (values: OnChangeEvent) => {
-    console.error(values);  // eslint-disable-line
-  };
-
-  const config: InitialAppConfig = {
-    apiKey: '',
-    lang: 'ua',
-  };
-
+  const [state, setState] = useState<OnChangeEvent | null>(null);
   return (
     <div className="App">
-      <Typography variant="h2" gutterBottom>
+      <Typography variant="h6" gutterBottom>
         Nova Poshta address select example
       </Typography>
       <Container component="main" maxWidth="lg">
@@ -26,11 +23,26 @@ function App() {
           direction="column"
           alignItems="center"
           justify="center"
-          style={{ minHeight: '100vh' }}
+          style={{ minHeight: '100vh', minWidth: 300 }}
         >
-          <Grid item lg={8} style={{ minWidth: 300 }}>
-            <NPWidget onChange={onChange} config={config} />
+          <Grid item lg={8} xs={12}>
+            <form action="#">
+              <NPWidget
+                onChange={(value) => setState(value)}
+              />
+            </form>
           </Grid>
+          {state && (
+          <Grid item lg={8} xs={12} style={{ padding: 30 }}>
+            <Badge badgeContent={state.fulfilled ? <CheckCircleIcon color="primary" /> : <ErrorIcon />}>
+              <Box style={{ textAlign: 'left', width: '100%' }}>
+                { state.city && <Typography variant="caption">Місто: {state.city.MainDescription}</Typography>}
+                <br />
+                { state.point && <Typography variant="caption">{state.point.Description}</Typography>}
+              </Box>
+            </Badge>
+          </Grid>
+          )}
         </Grid>
       </Container>
     </div>

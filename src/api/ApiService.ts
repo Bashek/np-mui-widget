@@ -5,8 +5,6 @@ import {
   SearchPointResponse,
   SearchSettlementResponse, ApiResponse, ApiRequest,
 } from './types';
-import { ErrorHandlerInterface } from '../errors/errorHandler';
-import { AppConfig } from '../types';
 
 export class ApiService {
   private searchSettlementCache = new Map<string, SettlementAddress[]>();
@@ -14,15 +12,15 @@ export class ApiService {
   private searchNPPointCache = new Map<SettlementAddress['Ref'], NPPoint[]>();
 
   constructor(
-    private appConfig: AppConfig,
-    private errorHandler: ErrorHandlerInterface,
+    private apiUrl: string = 'https://api.novaposhta.ua/v2.0/json/',
+    private apiKey: string = '',
   ) {}
 
   async searchSettlements(query: string): Promise<SettlementAddress[]> {
     if (!this.searchSettlementCache.has(query)) {
       try {
         const result = await this.makeRequest<SearchSettlementResponse>({
-          apiKey: this.appConfig.apiKey,
+          apiKey: this.apiKey,
           modelName: API_MODEL_NAME.ADDRESS,
           calledMethod: API_CALLED_METHOD.SEARCH_SETTLEMENT,
           methodProperties: {
@@ -30,15 +28,13 @@ export class ApiService {
             Limit: 5,
           },
         });
-
         if (result.data.length === 0) {
           this.searchSettlementCache.set(query, []);
         } else {
           this.searchSettlementCache.set(query, result.data[0].Addresses);
         }
       } catch (e) {
-        this.errorHandler(e);
-        return Promise.resolve([]);
+        return Promise.reject(e);
       }
     }
 
@@ -50,7 +46,7 @@ export class ApiService {
     if (!this.searchNPPointCache.has(cityRef)) {
       try {
         const result = await this.makeRequest<SearchPointResponse>({
-          apiKey: this.appConfig.apiKey,
+          apiKey: this.apiKey,
           modelName: API_MODEL_NAME.ADDRESS_GENERAL,
           calledMethod: API_CALLED_METHOD.GET_WAREHOUSE,
           methodProperties: {
@@ -59,8 +55,7 @@ export class ApiService {
         });
         this.searchNPPointCache.set(cityRef, result.data);
       } catch (e) {
-        this.errorHandler(e);
-        return Promise.resolve([]);
+        return Promise.reject(e);
       }
     }
 
@@ -76,7 +71,7 @@ export class ApiService {
       return Promise.reject(error);
     }
 
-    return fetch(this.appConfig.apiUrl, {
+    return fetch(this.apiUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json;charset=utf-8',

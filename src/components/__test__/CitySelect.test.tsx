@@ -3,42 +3,28 @@ import fetch from 'jest-fetch-mock';
 import {
   render, act, waitFor, fireEvent,
 } from '@testing-library/react';
-import { CitySelect, CitySelectProps } from '../CitySelect';
-import { createConfig } from '../../createConfig';
-import { ApiService } from '../../api/ApiService';
+import { CitySelect, CitySelectInputProps } from '../CitySelect';
 import { SearchSettlementResponseMock } from '../../api/__mocks__/SearchSettlementResponseMock';
-import { LocaleContext } from '../LocaleContext';
 import { LOCALE_UA } from '../../locale';
 
-const LOADER_TIMEOUT = 50;
+const LOADER_TIMEOUT = 500;
 describe('<CitySelect/>', () => {
   beforeEach(() => {
     fetch.resetMocks();
   });
 
-  function renderCitySelect(props: Partial<CitySelectProps> = {}) {
-    const appConfig = createConfig({
-      showLoadingSpinAfter: LOADER_TIMEOUT,
-    });
-    const apiService = new ApiService(appConfig, (error) => {
-      throw error;
-    });
-
-    const defaultProps: CitySelectProps = {
+  function renderCitySelect(props: Partial<CitySelectInputProps> = {}) {
+    const defaultProps: CitySelectInputProps = {
       onChange: () => undefined,
-      appConfig,
-      apiService,
       ...props,
     };
 
     return render(
-      <LocaleContext.Provider value={LOCALE_UA}>
-        <CitySelect {...defaultProps} />
-      </LocaleContext.Provider>,
+      <CitySelect {...defaultProps} />,
     );
   }
 
-  test('Loading should shown wile data loading', async () => {
+  test('Loading should be shown wile data loading', async () => {
     jest.useFakeTimers();
     fetch.mockResponse(async () => {
       return new Promise((resolve) => {

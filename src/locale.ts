@@ -13,3 +13,7 @@ export const LOCALE_RU = {
   CITY_LABEL: 'Город',
   POINT_LABEL: 'Отделение',
 };
+
+export const getLocale = (lang: string) => {
+  return lang === 'ua' ? LOCALE_UA : LOCALE_RU;
+};

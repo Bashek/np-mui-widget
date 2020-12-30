@@ -1,13 +1,11 @@
 import fetch from 'jest-fetch-mock';
-import { createConfig } from '../../createConfig';
 import { ApiService } from '../ApiService';
 import { SearchSettlementResponseMock } from '../__mocks__/SearchSettlementResponseMock';
 import { SearchPointResponseMock } from '../__mocks__/SearchPointResponseMock';
 import { SettlementAddress } from '../types';
 
-const createService = ({ errorHandler } = { errorHandler: () => {} }) => {
-  const config = createConfig();
-  return new ApiService(config, errorHandler);
+const createService = () => {
+  return new ApiService();
 };
 
 const getFirstMockedAddress = (): SettlementAddress => {
@@ -41,13 +39,12 @@ describe('ApiService', () => {
 
   it('should catch error parsing JSON', async () => {
     fetch.once('');
-    const errorHandler = jest.fn((error) => error);
-    // @ts-ignore
-    const service = createService({ errorHandler });
-    await service.searchSettlements('');
-    const errorValue = errorHandler.mock.results[0].value;
-    expect(errorValue).toBeInstanceOf(Error);
-    expect(errorValue.message).toContain('JSON');
+    try {
+      const service = createService();
+      await service.searchSettlements('');
+    } catch (error) {
+      expect(error.message).toContain('JSON');
+    }
   });
 
   it('should catch error with bad HTTP response', async () => {
@@ -57,13 +54,13 @@ describe('ApiService', () => {
         status: 400,
       },
     })));
-    const errorHandler = jest.fn((error) => error);
-    // @ts-ignore
-    const service = createService({ errorHandler });
-    await service.searchSettlements('');
-    const errorValue = errorHandler.mock.results[0].value;
-    expect(errorValue).toBeInstanceOf(Error);
-    expect(errorValue.message).toContain('400');
+    const service = createService();
+    try {
+      await service.searchSettlements('');
+    } catch (error) {
+      expect(error).toBeInstanceOf(Error);
+      expect(error.message).toContain('400');
+    }
   });
 
   it('should catch error from API', async () => {
@@ -71,13 +68,14 @@ describe('ApiService', () => {
     fetch.once(JSON.stringify({
       errorCodes,
     }));
-    const errorHandler = jest.fn((error) => error);
     // @ts-ignore
-    const service = createService({ errorHandler });
-    await service.searchSettlements('');
-    const errorValue = errorHandler.mock.results[0].value;
-    expect(errorValue).toBeInstanceOf(Error);
-    expect(errorValue.message).toContain(errorCodes.join(', '));
+    try {
+      const service = createService();
+      await service.searchSettlements('');
+    } catch (error) {
+      expect(error).toBeInstanceOf(Error);
+      expect(error.message).toContain(errorCodes.join(', '));
+    }
   });
 
   it('should cache requests', async () => {
