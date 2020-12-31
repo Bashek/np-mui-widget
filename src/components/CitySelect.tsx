@@ -133,6 +133,11 @@ export function CitySelect(inputProps: CitySelectInputProps) {
           {...params}
           label={LOCALE.CITY_LABEL}
           variant="outlined"
+          inputProps={{
+            ...params.inputProps,
+            autoComplete: 'disable-city',
+          }}
+          /* eslint-disable-next-line react/jsx-no-duplicate-props */
           InputProps={{
             name: 'np-city',
             ...params.InputProps,

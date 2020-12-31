@@ -112,6 +112,11 @@ export function PointSelect(inputProps: PointSelectInputProps) {
           label={LOCALE.POINT_LABEL}
           variant="outlined"
           inputRef={refInput}
+          inputProps={{
+            ...params.inputProps,
+            autoComplete: 'disable-point',
+          }}
+          /* eslint-disable-next-line react/jsx-no-duplicate-props */
           InputProps={{
             name: 'np-point',
             ...params.InputProps,
