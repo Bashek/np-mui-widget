@@ -15,20 +15,23 @@ export type PointSelectInputProps = {
   onChange?: (point: NPPoint | null) => void,
   onError?: (error: Error) => void,
   lang?: Lang,
+  autoFocus?: boolean,
   loadingSpinDelay?: number,
   apiKey?: string,
   apiUrl?: string
 };
 
-type PointSelectProps = Required<Omit<PointSelectInputProps, 'apiKey' | 'apiUrl' | 'city'>> & {
+type PointSelectProps = Required<Omit<PointSelectInputProps, 'apiKey' | 'apiUrl' | 'city' | 'autoFocus'>> & {
   apiKey?: string,
   apiUrl?: string,
+  autoFocus?: boolean,
 };
 
 const defaultProps: PointSelectProps = {
   className: '',
-  loadingSpinDelay: 500,
+  loadingSpinDelay: 300,
   lang: LANG_UA,
+  autoFocus: false,
   onChange: () => {},
   onError: () => {},
 };
@@ -46,7 +49,7 @@ export function PointSelect(inputProps: PointSelectInputProps) {
     };
   });
   const {
-    loadingSpinDelay, onChange, className, onError,
+    loadingSpinDelay, onChange, className, onError, autoFocus,
   } = config;
   const { city } = inputProps;
   const [points, setPoints] = useState<NPPoint[]>([]);
@@ -71,7 +74,7 @@ export function PointSelect(inputProps: PointSelectInputProps) {
         setLoading(false);
         if (nextPoints) {
           setPoints(nextPoints);
-          if (refInput.current !== null) {
+          if (autoFocus && refInput.current !== null) {
             refInput.current.focus();
           }
         }
