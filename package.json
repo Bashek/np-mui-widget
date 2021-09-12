@@ -1,14 +1,14 @@
 {
   "name": "np-mui-widget",
-  "version": "0.3.6",
+  "version": "0.3.7",
   "private": false,
-  "dependencies": {
+  "main": "lib/widget.js",
+  "peerDependencies": {
     "@material-ui/core": "^4.11.0",
     "@material-ui/lab": "^4.0.0-alpha.56",
     "react": "^17.0.1",
     "react-dom": "^17.0.1"
   },
-  "main": "lib/widget.js",
   "devDependencies": {
     "@babel/core": "7.12.3",
     "@material-ui/icons": "^4.11.2",
